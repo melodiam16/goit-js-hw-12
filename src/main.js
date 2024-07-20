@@ -62,6 +62,7 @@ async function handlerSubmit(event) {
           'Sorry, there are no images matching your search query. Please try again!',
         position: 'topRight',
       });
+      searchForm.reset();
     } else {
       cardsArea.innerHTML = '';
       cardsMarkup(data);
