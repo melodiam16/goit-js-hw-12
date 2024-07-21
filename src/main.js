@@ -63,13 +63,19 @@ async function handlerSubmit(event) {
         position: 'topRight',
       });
       searchForm.reset();
+      loadMoreBtn.classList.add('hidden');
     } else {
       cardsArea.innerHTML = '';
       cardsMarkup(data);
       searchForm.reset();
 
       lightbox.refresh();
-      loadMoreBtn.classList.remove('hidden');
+
+      if (data.length < parameters.limit) {
+        loadMoreBtn.classList.add('hidden');
+      } else {
+        loadMoreBtn.classList.remove('hidden');
+      }
 
       scrollAfterRender();
     }
@@ -80,7 +86,6 @@ async function handlerSubmit(event) {
     content.classList.remove('hidden');
 
     if (parameters.maxPage === 1) {
-      loadMoreBtn.removeEventListener('click', handleLoadMore);
       loadMoreBtn.classList.add('hidden');
     }
   }
@@ -101,12 +106,14 @@ async function handleLoadMore() {
 
     scrollAfterRender();
 
-    if (parameters.page * parameters.limit >= parameters.totalHits) {
+    if (
+      data.length < parameters.limit ||
+      parameters.page * parameters.limit >= parameters.totalHits
+    ) {
       loadMoreBtn.classList.add('hidden');
       iziToast.info({
         message: "We're sorry, but you've reached the end of search results.",
       });
-      loadMoreBtn.removeEventListener('click', handleLoadMore);
     } else {
       loadMoreBtn.classList.remove('hidden');
     }
